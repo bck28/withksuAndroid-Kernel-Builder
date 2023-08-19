@@ -99,21 +99,6 @@ jobs:
 
           echo "🤔 Clone kernel source => ($KERNEL_REPO)"
 
-      - name: Setup LXC_DOCKER
-        if: env.LXC_DOCKER == 'true'
-        run: |
-          cd $KERNEL_NAME
-          wget https://github.com/wu17481748/lxc-docker/releases/download/lxc-docker-2config/LXC-DOCKER-OPEN-CONFIG.sh
-          chmod 777 LXC-DOCKER-OPEN-CONFIG.sh
-          ./LXC-DOCKER-OPEN-CONFIG.sh arch/arm64/configs/${{ env.KERNEL_CONFIG }} -w
-
-      - name: Setup CLOSE ANDROID_PARANOID_NETWORK
-        if: env.ANDROID_PARANOID_NETWORK_OFF == 'true'
-        run: |
-          cd $KERNEL_NAME
-          sed -i '/CONFIG_ANDROID_PARANOID_NETWORK/d' arch/arm64/configs/${{ env.KERNEL_CONFIG }}
-          echo "# CONFIG_ANDROID_PARANOID_NETWORK is not set" >> arch/arm64/configs/${{ env.KERNEL_CONFIG }}
-
       - name: "💫 Get toolchains"
         env:
           toolchains: "${{ toJSON(matrix.repos.toolchains) }}"
@@ -232,6 +217,21 @@ jobs:
         run: |
           echo "PATH Variable: $PATH"
           make ${{ env.args }} ${{ env.DEFCONFIG_NAME }}
+
+      - name: Setup LXC_DOCKER
+        if: env.LXC_DOCKER == 'true'
+        run: |
+          cd $KERNEL_NAME
+          wget https://github.com/wu17481748/lxc-docker/releases/download/lxc-docker-2config/LXC-DOCKER-OPEN-CONFIG.sh
+          chmod 777 LXC-DOCKER-OPEN-CONFIG.sh
+          ./LXC-DOCKER-OPEN-CONFIG.sh arch/arm64/configs/${{ env.KERNEL_CONFIG }} -w
+
+      - name: Setup CLOSE ANDROID_PARANOID_NETWORK
+        if: env.ANDROID_PARANOID_NETWORK_OFF == 'true'
+        run: |
+          cd $KERNEL_NAME
+          sed -i '/CONFIG_ANDROID_PARANOID_NETWORK/d' arch/arm64/configs/${{ env.KERNEL_CONFIG }}
+          echo "# CONFIG_ANDROID_PARANOID_NETWORK is not set" >> arch/arm64/configs/${{ env.KERNEL_CONFIG }}
 
       - name: "🎶 Build kernel"
         working-directory: ${{ env.KERNEL_NAME }}
