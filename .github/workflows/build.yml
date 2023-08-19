@@ -105,14 +105,14 @@ jobs:
           cd $KERNEL_NAME
           wget https://github.com/wu17481748/lxc-docker/releases/download/lxc-docker-2config/LXC-DOCKER-OPEN-CONFIG.sh
           chmod 777 LXC-DOCKER-OPEN-CONFIG.sh
-          ./LXC-DOCKER-OPEN-CONFIG.sh android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }} -w
+          ./LXC-DOCKER-OPEN-CONFIG.sh arch/arm64/configs/${{ env.KERNEL_CONFIG }} -w
 
       - name: Setup CLOSE ANDROID_PARANOID_NETWORK
         if: env.ANDROID_PARANOID_NETWORK_OFF == 'true'
         run: |
           cd $KERNEL_NAME
-          sed -i '/CONFIG_ANDROID_PARANOID_NETWORK/d' android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
-          echo "# CONFIG_ANDROID_PARANOID_NETWORK is not set" >> android-kernel/arch/arm64/configs/${{ env.KERNEL_CONFIG }}
+          sed -i '/CONFIG_ANDROID_PARANOID_NETWORK/d' arch/arm64/configs/${{ env.KERNEL_CONFIG }}
+          echo "# CONFIG_ANDROID_PARANOID_NETWORK is not set" >> arch/arm64/configs/${{ env.KERNEL_CONFIG }}
 
       - name: "💫 Get toolchains"
         env:
